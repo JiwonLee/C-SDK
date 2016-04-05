@@ -1,9 +1,26 @@
 #include "coolsms.h"
-#include "Coolsms.c"
 
 typedef struct { char *image, *encoding; } upload_image_opt;
 typedef struct { char *offset, *limit; } image_list_opt;
 typedef struct { char *image_ids; } delete_images_opt;
+
+upload_image_opt upload_image_opt_init() {
+	upload_image_opt image_info = { "\0", "\0" };
+
+	return image_info;
+}
+
+image_list_opt image_list_opt_init() {
+	image_list_opt image_info = { "\0", "\0" };
+
+	return image_info;
+}
+
+delete_images_opt delete_images_opt_init() {
+	delete_images_opt image_info = { "\0" };
+
+	return image_info;
+}
 
 response_struct uploadImage(const user_opt *u, const upload_image_opt *i)
 {

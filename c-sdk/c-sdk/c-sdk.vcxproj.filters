@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\Message">
+      <UniqueIdentifier>{e49a9d56-a40c-46c5-b951-7eb2193f371f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GroupMessage.c">
@@ -30,9 +33,18 @@
     <ClCompile Include="SenderID.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="csmd5.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="example_send.c">
+      <Filter>소스 파일\Message</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coolsms.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="csmd5.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

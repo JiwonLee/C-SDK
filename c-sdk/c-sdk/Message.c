@@ -1,10 +1,33 @@
 #include "coolsms.h"
-#include "Coolsms.c"
 
 typedef struct { char *to, *from, *text, *type, *image, *image_encoding, *refname, *country, *datetime, *subject, *charset, *srk, *mode, *delay, *force_sms, *os_platform, *dev_lang, *sdk_version, *app_version; } send_opt;
 typedef struct { char *offset, *limit, *rcpt, *start, *end, *status, *resultcode, *notin_resultcode, *mid, *gid; } sent_opt;
 typedef struct { char *mid, *gid; } cancel_opt;
 typedef struct { char *count, *unit, *date, *channel; } status_opt;
+
+send_opt send_opt_init() {
+	send_opt message_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
+
+	return message_info;
+}
+
+sent_opt sent_opt_init() {
+	sent_opt message_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
+
+	return message_info;
+}
+
+cancel_opt cancel_opt_init() {
+	cancel_opt message_info = { "\0", "\0" };
+
+	return message_info;
+}
+
+status_opt status_opt_init() {
+	status_opt message_info = { "\0", "\0" };
+
+	return message_info;
+}
 
 
 response_struct sendMessage(const user_opt *u, const send_opt *s)

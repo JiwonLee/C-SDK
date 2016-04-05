@@ -1,5 +1,4 @@
 #include "coolsms.h"
-#include "Coolsms.c"
 
 typedef struct { char *charset, *srk, *mode, *delay, *force_sms, *os_platform, *dev_lang, *sdk_version, *app_version; } new_group_opt;
 typedef struct { char *group_id; } group_info_opt;
@@ -9,6 +8,54 @@ typedef struct { char *messages; } add_messages_json_opt;
 typedef struct { char *offset, *limit; } message_list_opt;
 typedef struct { char *message_ids; } delete_messages_opt;
 typedef struct { char *group_id; } send_group_opt;
+
+new_group_opt new_group_opt_init() {
+	new_group_opt group_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
+
+	return group_info;
+}
+
+group_info_opt group_info_opt_init() {
+	group_info_opt group_info = { "\0" };
+
+	return group_info;
+}
+
+delete_groups_opt delete_groups_opt_init() {
+	delete_groups_opt group_info = { "\0" };
+
+	return group_info;
+}
+
+add_messages_opt add_messages_opt_init() {
+	add_messages_opt message_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
+
+	return message_info;
+}
+
+add_messages_json_opt add_messages_json_opt_init() {
+	add_messages_json_opt message_info = { "\0" };
+
+	return message_info;
+}
+
+message_list_opt message_list_opt_init() {
+	message_list_opt message_info = { "\0", "\0" };
+
+	return message_info;
+}
+
+delete_messages_opt delete_messages_opt_init() {
+	delete_messages_opt message_info = { "\0" };
+
+	return message_info;
+}
+
+send_group_opt send_group_opt_init() {
+	send_group_opt group_info = { "\0" };
+
+	return group_info;
+}
 
 response_struct newGroup(const user_opt *u, const new_group_opt *g)
 {

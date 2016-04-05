@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Coolsms.c" />
+    <ClCompile Include="csmd5.c" />
+    <ClCompile Include="example_send.c" />
     <ClCompile Include="GroupMessage.c" />
     <ClCompile Include="Image.c" />
     <ClCompile Include="Message.c" />
@@ -27,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coolsms.h" />
+    <ClInclude Include="csmd5.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C8A6B5D5-2954-46B2-9759-FA5C4B56EBBF}</ProjectGuid>
@@ -103,6 +106,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Hensley\Downloads\curl-7.46.0\curl-7.46.0\build\Win32\VC14\LIB Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -117,6 +121,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Hensley\Downloads\curl-7.46.0\curl-7.46.0\build\Win32\VC14\LIB Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,6 +140,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Hensley\Downloads\curl-7.46.0\curl-7.46.0\build\Win32\VC14\LIB Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,6 +159,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\Hensley\Downloads\curl-7.46.0\curl-7.46.0\build\Win32\VC14\LIB Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

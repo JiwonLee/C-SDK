@@ -1,5 +1,4 @@
 #include "coolsms.h"
-#include "Coolsms.c"
 
 typedef struct { char * phone, *site_user; } register_opt;
 typedef struct { char * handle_key; } verify_opt;
@@ -7,6 +6,42 @@ typedef struct { char * handle_key; } delete_opt;
 typedef struct { char * site_user; } list_opt;
 typedef struct { char * site_user; } get_default_opt;
 typedef struct { char * handle_key, *site_user; } set_default_opt;
+
+register_opt register_opt_init() {
+	register_opt senderid_info = { "\0", "\0" };
+
+	return senderid_info;
+}
+
+verify_opt verify_opt_init() {
+	verify_opt senderid_info = { "\0" };
+
+	return senderid_info;
+}
+
+delete_opt delete_opt_init() {
+	delete_opt senderid_info = { "\0" };
+
+	return senderid_info;
+}
+
+list_opt list_opt_init() {
+	list_opt senderid_info = { "\0" };
+
+	return senderid_info;
+}
+
+get_default_opt get_default_opt_init() {
+	get_default_opt senderid_info = { "\0" };
+
+	return senderid_info;
+}
+
+set_default_opt set_default_opt_init() {
+	set_default_opt senderid_info = { "\0", "\0" };
+
+	return senderid_info;
+}
 
 response_struct registerSender(const user_opt *u, const register_opt *s)
 {
