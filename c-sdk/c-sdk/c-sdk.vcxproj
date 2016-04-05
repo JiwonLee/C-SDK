@@ -18,6 +18,16 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Coolsms.c" />
+    <ClCompile Include="GroupMessage.c" />
+    <ClCompile Include="Image.c" />
+    <ClCompile Include="Message.c" />
+    <ClCompile Include="SenderID.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="coolsms.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C8A6B5D5-2954-46B2-9759-FA5C4B56EBBF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -145,16 +155,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\Coolsms.c" />
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\GroupMessage.c" />
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\Image.c" />
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\Message.c" />
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\SenderID.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\c-sdk\c-sdk\coolsms.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

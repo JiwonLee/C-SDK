@@ -15,24 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\SenderID.c">
+    <ClCompile Include="GroupMessage.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\Image.c">
+    <ClCompile Include="Message.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\Message.c">
+    <ClCompile Include="Coolsms.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\GroupMessage.c">
+    <ClCompile Include="Image.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\c-sdk\c-sdk\Coolsms.c">
+    <ClCompile Include="SenderID.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\c-sdk\c-sdk\coolsms.h">
+    <ClInclude Include="coolsms.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
