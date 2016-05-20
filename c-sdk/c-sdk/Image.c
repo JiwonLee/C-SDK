@@ -1,9 +1,5 @@
 #include "coolsms.h"
 
-typedef struct { char *image, *encoding; } upload_image_opt;
-typedef struct { char *offset, *limit; } image_list_opt;
-typedef struct { char *image_ids; } delete_images_opt;
-
 upload_image_opt upload_image_opt_init() {
 	upload_image_opt image_info = { "\0", "\0" };
 
@@ -22,7 +18,13 @@ delete_images_opt delete_images_opt_init() {
 	return image_info;
 }
 
-response_struct uploadImage(const user_opt *u, const upload_image_opt *i)
+image_info_opt image_info_opt_init() {
+	image_info_opt image_info = { "\0" };
+
+	return image_info;
+}
+
+response_struct upload_image(const user_opt *u, const upload_image_opt *i)
 {
 	char options[1024];
 	response_struct output;
@@ -30,7 +32,7 @@ response_struct uploadImage(const user_opt *u, const upload_image_opt *i)
 	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&image=%s&encoding=%s",
 		u->api_key, u->salt, u->signature, u->timestamp, i->image, i->encoding);
 
-	if (curlProcess(true, options, "upload_image", &output) == CURLE_OK)
+	if (curl_process(true, options, "upload_image", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -38,15 +40,17 @@ response_struct uploadImage(const user_opt *u, const upload_image_opt *i)
 	return output;
 }
 
-response_struct imageInfo(const user_opt *u)
+response_struct image_info(const user_opt *u, const image_info_opt *i)
 {
 	char options[1024];
+	char param[1024];
 	response_struct output;
 
-	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s",
-		u->api_key, u->salt, u->signature, u->timestamp);
+	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&image_id=%s",
+		u->api_key, u->salt, u->signature, u->timestamp, i->image_id);
+	sprintf(param, "images/%s", i->image_id);
 
-	if (curlProcess(false, options, "image_info", &output) == CURLE_OK)
+	if (curl_process(false, options, param, "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -54,7 +58,7 @@ response_struct imageInfo(const user_opt *u)
 	return output;
 }
 
-response_struct imageList(const user_opt *u, const image_list_opt *i)
+response_struct image_list(const user_opt *u, const image_list_opt *i)
 {
 	char options[1024];
 	response_struct output;
@@ -62,7 +66,7 @@ response_struct imageList(const user_opt *u, const image_list_opt *i)
 	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&offset=%s&limit=%s",
 		u->api_key, u->salt, u->signature, u->timestamp, i->offset, i->limit);
 
-	if (curlProcess(false, options, "image_list", &output) == CURLE_OK)
+	if (curl_process(false, options, "image_list", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -70,7 +74,7 @@ response_struct imageList(const user_opt *u, const image_list_opt *i)
 	return output;
 }
 
-response_struct deleteImages(const user_opt *u, const delete_images_opt *i)
+response_struct delete_images(const user_opt *u, const delete_images_opt *i)
 {
 	char options[1024];
 	response_struct output;
@@ -78,7 +82,7 @@ response_struct deleteImages(const user_opt *u, const delete_images_opt *i)
 	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&image_ids=%s",
 		u->api_key, u->salt, u->signature, u->timestamp, i->image_ids);
 
-	if (curlProcess(true, options, "delete_images", &output) == CURLE_OK)
+	if (curl_process(true, options, "delete_images", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");

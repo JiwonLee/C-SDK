@@ -1,10 +1,5 @@
 #include "coolsms.h"
 
-typedef struct { char *to, *from, *text, *type, *image, *image_encoding, *refname, *country, *datetime, *subject, *charset, *srk, *mode, *delay, *force_sms, *os_platform, *dev_lang, *sdk_version, *app_version; } send_opt;
-typedef struct { char *offset, *limit, *rcpt, *start, *end, *status, *resultcode, *notin_resultcode, *mid, *gid; } sent_opt;
-typedef struct { char *mid, *gid; } cancel_opt;
-typedef struct { char *count, *unit, *date, *channel; } status_opt;
-
 send_opt send_opt_init() {
 	send_opt message_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
 
@@ -12,7 +7,7 @@ send_opt send_opt_init() {
 }
 
 sent_opt sent_opt_init() {
-	sent_opt message_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
+	sent_opt message_info = { "0", "20", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
 
 	return message_info;
 }
@@ -24,21 +19,20 @@ cancel_opt cancel_opt_init() {
 }
 
 status_opt status_opt_init() {
-	status_opt message_info = { "\0", "\0" };
+	status_opt message_info = { "1", "minuit", "\0", "1" };
 
 	return message_info;
 }
 
-
-response_struct sendMessage(const user_opt *u, const send_opt *s)
+response_struct send_message(const user_opt *u, const send_opt *s)
 {
 	char options[1024];
 	response_struct output;
 
-	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&to=%s&from=%s&text=%s&type=%s&image=%s&refname=%s&country=%s&datetime=%s&subject=%s&charset=%s&srk=%s&mode=%s&delay=%s&force_sms=%s&os_platform=%s&dev_lang=%s&sdk_version=%s&app_version=%s",
-		u->api_key, u->salt, u->signature, u->timestamp, s->to, s->from, s->text, s->type, s->image, s->refname, s->country, s->datetime, s->subject, s->charset, s->srk, s->mode, s->delay, s->force_sms, s->os_platform, s->dev_lang, s->sdk_version, s->app_version);
+	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&to=%s&from=%s&text=%s&type=%s&image=%s&refname=%s&country_code=%s&datetime=%s&subject=%s&charset=%s&srk=%s&mode=%s&delay=%s&force_sms=%s&os_platform=%s&dev_lang=%s&sdk_version=%s&app_version=%s",
+		u->api_key, u->salt, u->signature, u->timestamp, s->to, s->from, s->text, s->type, s->image, s->refname, s->country_code, s->datetime, s->subject, s->charset, s->srk, s->mode, s->delay, s->force_sms, s->os_platform, s->dev_lang, s->sdk_version, s->app_version);
 
-	if (curlProcess(true, options, "send", &output) == CURLE_OK)
+	if (curl_process(true, options, "send", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -51,10 +45,10 @@ response_struct sent(const user_opt *u, const sent_opt *s)
 	char options[1024];
 	response_struct output;
 
-	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&offset=%s&limit=%s&rcpt=%s&start=%s&end=%s&status=%s&resultcode=%s&notin_resultcode=%s&mid=%s&gid=%s",
-		u->api_key, u->salt, u->signature, u->timestamp, s->offset, s->limit, s->rcpt, s->start, s->end, s->status, s->resultcode, s->notin_resultcode, s->mid, s->gid);
+	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&offset=%s&limit=%s&rcpt=%s&start=%s&end=%s&status=%s&resultcode=%s&notin_resultcode=%s&message_id=%s&group_id=%s",
+		u->api_key, u->salt, u->signature, u->timestamp, s->offset, s->limit, s->rcpt, s->start, s->end, s->status, s->resultcode, s->notin_resultcode, s->message_id, s->group_id);
 
-	if (curlProcess(false, options, "sent", &output) == CURLE_OK)
+	if (curl_process(false, options, "sent", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -70,7 +64,7 @@ response_struct cancel(const user_opt *u, const cancel_opt *c)
 	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&mid=%s&gid=%s",
 		u->api_key, u->salt, u->signature, u->timestamp, c->mid, c->gid);
 
-	if (curlProcess(true, options, "cancel", &output) == CURLE_OK)
+	if (curl_process(true, options, "cancel", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -86,7 +80,7 @@ response_struct balance(const user_opt *u)
 	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s",
 		u->api_key, u->salt, u->signature, u->timestamp);
 
-	if (curlProcess(true, options, "balance", &output) == CURLE_OK)
+	if (curl_process(false, options, "balance", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -99,10 +93,10 @@ response_struct status(const user_opt *u, const status_opt *s)
 	char options[1024];
 	response_struct output;
 
-	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&count=%s&unit=%s&date=%s&channel=%s",
+	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&count=%s&unit=%s&read_date=%s&channel=%s",
 		u->api_key, u->salt, u->signature, u->timestamp, s->count, s->unit, s->date, s->channel);
-
-	if (curlProcess(true, options, "status", &output) == CURLE_OK)
+	printf("%s\n", options);
+	if (curl_process(false, options, "status", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
