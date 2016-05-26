@@ -36,6 +36,9 @@ set_default_opt set_default_opt_init() {
 	return senderid_info;
 }
 
+/**
+* @brief    POST    Register
+*/
 response_struct register_sender(const user_opt *u, const register_opt *r)
 {
 	char options[1024];
@@ -52,6 +55,9 @@ response_struct register_sender(const user_opt *u, const register_opt *r)
 	return output;
 }
 
+/**
+* @brief    POST    Verify
+*/
 response_struct verify(const user_opt *u, const verify_opt *v)
 {
 	char options[1024];
@@ -68,6 +74,9 @@ response_struct verify(const user_opt *u, const verify_opt *v)
 	return output;
 }
 
+/**
+* @brief    POST    Delete
+*/
 response_struct delete_sender(const user_opt *u, const delete_opt *s)
 {
 	char options[1024];
@@ -84,6 +93,9 @@ response_struct delete_sender(const user_opt *u, const delete_opt *s)
 	return output;
 }
 
+/**
+* @brief    GET    List
+*/
 response_struct list(const user_opt *u, const list_opt *s)
 {
 	char options[1024];
@@ -100,6 +112,9 @@ response_struct list(const user_opt *u, const list_opt *s)
 	return output;
 }
 
+/**
+* @brief    POST    Set default
+*/
 response_struct set_default(const user_opt *u, const set_default_opt *s)
 {
 	char options[1024];
@@ -116,6 +131,9 @@ response_struct set_default(const user_opt *u, const set_default_opt *s)
 	return output;
 }
 
+/**
+* @brief    GET    Get default
+*/
 response_struct get_default(const user_opt *u, const get_default_opt *s)
 {
 	char options[1024];

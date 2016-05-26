@@ -1,7 +1,7 @@
 #include "coolsms.h"
 
 send_opt send_opt_init() {
-	send_opt message_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0" };
+	send_opt message_info = { "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
 
 	return message_info;
 }
@@ -24,22 +24,36 @@ status_opt status_opt_init() {
 	return message_info;
 }
 
+/**
+* @brief    POST    Send
+*/
 response_struct send_message(const user_opt *u, const send_opt *s)
 {
 	char options[1024];
 	response_struct output;
-
-	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&to=%s&from=%s&text=%s&type=%s&image=%s&refname=%s&country_code=%s&datetime=%s&subject=%s&charset=%s&srk=%s&mode=%s&delay=%s&force_sms=%s&os_platform=%s&dev_lang=%s&sdk_version=%s&app_version=%s",
+	
+	if (strcmp(s->type, "MMS")) {
+		sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&to=%s&from=%s&text=%s&type=%s&image=%s&refname=%s&country_code=%s&datetime=%s&subject=%s&charset=%s&srk=%s&mode=%s&delay=%s&force_sms=%s&os_platform=%s&dev_lang=%s&sdk_version=%s&app_version=%s",
 		u->api_key, u->salt, u->signature, u->timestamp, s->to, s->from, s->text, s->type, s->image, s->refname, s->country_code, s->datetime, s->subject, s->charset, s->srk, s->mode, s->delay, s->force_sms, s->os_platform, s->dev_lang, s->sdk_version, s->app_version);
 
-	if (curl_process(true, options, "send", "sms", &output) == CURLE_OK)
-		printf("\nSuccess!\n");
-	else
-		printf("\nError!\n");
+		if (curl_process(true, options, "send", "sms", &output) == CURLE_OK)
+			printf("\nSuccess!\n");
+		else
+			printf("\nError!\n");
+	}
+	else {
+		if (multi_curl_process(u, s, NULL, "send", "sms", &output) == CURLE_OK)
+			printf("\nSuccess!\n");
+		else
+			printf("\nError!\n");
+	}
 
 	return output;
 }
 
+/**
+* @brief    GET    Sent
+*/
 response_struct sent(const user_opt *u, const sent_opt *s)
 {
 	char options[1024];
@@ -56,6 +70,9 @@ response_struct sent(const user_opt *u, const sent_opt *s)
 	return output;
 }
 
+/**
+* @brief    POST    Cancel
+*/
 response_struct cancel(const user_opt *u, const cancel_opt *c)
 {
 	char options[1024];
@@ -72,6 +89,9 @@ response_struct cancel(const user_opt *u, const cancel_opt *c)
 	return output;
 }
 
+/**
+* @brief    GET    Balance
+*/
 response_struct balance(const user_opt *u)
 {
 	char options[1024];
@@ -88,6 +108,9 @@ response_struct balance(const user_opt *u)
 	return output;
 }
 
+/**
+* @brief    GET    Status
+*/
 response_struct status(const user_opt *u, const status_opt *s)
 {
 	char options[1024];

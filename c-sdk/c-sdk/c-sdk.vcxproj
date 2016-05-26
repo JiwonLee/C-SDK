@@ -55,10 +55,7 @@
     <ClInclude Include="csmd5.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\..\Pictures\test.jpg">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </Image>
+    <Image Include="test.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C8A6B5D5-2954-46B2-9759-FA5C4B56EBBF}</ProjectGuid>

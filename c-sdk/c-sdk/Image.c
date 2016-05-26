@@ -24,15 +24,14 @@ image_info_opt image_info_opt_init() {
 	return image_info;
 }
 
+/**
+* @brief    POST    Upload image in FTP
+*/
 response_struct upload_image(const user_opt *u, const upload_image_opt *i)
 {
-	char options[1024];
 	response_struct output;
 
-	sprintf(options, "api_key=%s&salt=%s&signature=%s&timestamp=%s&image=%s&encoding=%s",
-		u->api_key, u->salt, u->signature, u->timestamp, i->image, i->encoding);
-
-	if (curl_process(true, options, "upload_image", "sms", &output) == CURLE_OK)
+	if (multi_curl_process(u, NULL, i, "upload_image", "sms", &output) == CURLE_OK)
 		printf("\nSuccess!\n");
 	else
 		printf("\nError!\n");
@@ -40,6 +39,9 @@ response_struct upload_image(const user_opt *u, const upload_image_opt *i)
 	return output;
 }
 
+/**
+* @brief    GET    Get infomation of image
+*/
 response_struct image_info(const user_opt *u, const image_info_opt *i)
 {
 	char options[1024];
@@ -58,6 +60,9 @@ response_struct image_info(const user_opt *u, const image_info_opt *i)
 	return output;
 }
 
+/**
+* @brief    GET    Get list of images
+*/
 response_struct image_list(const user_opt *u, const image_list_opt *i)
 {
 	char options[1024];
@@ -74,6 +79,9 @@ response_struct image_list(const user_opt *u, const image_list_opt *i)
 	return output;
 }
 
+/**
+* @brief    POST    Delete images
+*/
 response_struct delete_images(const user_opt *u, const delete_images_opt *i)
 {
 	char options[1024];

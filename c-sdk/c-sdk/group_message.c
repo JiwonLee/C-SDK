@@ -48,6 +48,9 @@ send_group_opt send_group_opt_init() {
 	return group_info;
 }
 
+/**
+* @brief    GET    Create group
+*/
 response_struct create_group(const user_opt *u, const new_group_opt *g)
 {
 	char options[1024];
@@ -64,6 +67,9 @@ response_struct create_group(const user_opt *u, const new_group_opt *g)
 	return output;
 }
 
+/**
+* @brief    GET    Get list of groups
+*/
 response_struct get_group_list(const user_opt *u)
 {
 	char options[1024];
@@ -80,6 +86,9 @@ response_struct get_group_list(const user_opt *u)
 	return output;
 }
 
+/**
+* @brief    GET    Get information of group
+*/
 response_struct get_group_info(const user_opt *u, const group_info_opt *g)
 {
 	char options[1024];
@@ -98,6 +107,9 @@ response_struct get_group_info(const user_opt *u, const group_info_opt *g)
 	return output;
 }
 
+/**
+* @brief    POST    Delete groups
+*/
 response_struct delete_groups(const user_opt *u, const delete_groups_opt *g)
 {
 	char options[1024];
@@ -114,6 +126,9 @@ response_struct delete_groups(const user_opt *u, const delete_groups_opt *g)
 	return output;
 }
 
+/**
+* @brief    POST    Add messages in group
+*/
 response_struct add_messages(const user_opt *u, const add_messages_opt *m)
 {
 	char options[1024];
@@ -132,6 +147,9 @@ response_struct add_messages(const user_opt *u, const add_messages_opt *m)
 	return output;
 }
 
+/**
+* @brief    POST    Add messages of json type in group
+*/
 response_struct add_messages_json(const user_opt *u, const add_messages_json_opt *m)
 {
 	char options[1024]; 
@@ -150,6 +168,9 @@ response_struct add_messages_json(const user_opt *u, const add_messages_json_opt
 	return output;
 }
 
+/**
+* @brief    GET    Get message list in group
+*/
 response_struct get_message_list(const user_opt *u, const message_list_opt *m)
 {
 	char options[1024]; 
@@ -168,6 +189,9 @@ response_struct get_message_list(const user_opt *u, const message_list_opt *m)
 	return output;
 }
 
+/**
+* @brief    POST    Delete messages in group
+*/
 response_struct delete_messages(const user_opt *u, const delete_messages_opt *m)
 {
 	char options[1024];
@@ -186,6 +210,9 @@ response_struct delete_messages(const user_opt *u, const delete_messages_opt *m)
 	return output;
 }
 
+/**
+* @brief    POST    Send group
+*/
 response_struct send_group(const user_opt *u, const send_group_opt *g)
 {
 	char options[1024];

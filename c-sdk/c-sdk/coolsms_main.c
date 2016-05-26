@@ -1,20 +1,44 @@
 #include "coolsms.h"
 
+/**
+* Copyright (C) 2008-2016 NURIGO \n
+* http://www.coolsms.co.kr
+*/
+
+/**
+* @mainpage C SDK
+* @section intro 소개
+*     - 소개 : C SDK
+*     - 버전 : 2.0
+*     - 설명 : Coolsms REST API를 이용하여 보다 빠르고 안전하게 문자메시지를 보낼 수 있는 C SDK 입니다.\n
+* @section CreateInfo 작성 정보
+*     - 작성자 : Nurigo
+*     - 작성일 : 2016/05/24
+* @section Caution 주의 사항
+*     - 해당 C SDK 는 SMS API v2 를 주로 개발되었음을 알려드립니다.
+* @section common 기타 정보
+*     - 저작권 GPL v2
+*/
+
+/**
+* @brief  Initialize user infomation 
+*/
 user_opt user_opt_init(char *api_key, char *api_secret)
 {
 	user_opt user_info = { "\0", "\0", "\0", "\0", "\0", "\0" };
-	char *uniq;
+	char *uuid;
 	char *salt = (char*)malloc(2 * 20 + 1);
 	char *buf_ptr = salt;
 
 	user_info.api_key = api_key;
 	user_info.api_secret = api_secret;
 	user_info.timestamp = get_timestamp();
-	uniq = get_uniq();
-	buf_ptr += sprintf(buf_ptr, "%s", uniq);
+	uuid = get_uuid();
+	buf_ptr += sprintf(buf_ptr, "%s", uuid);
 	user_info.salt = salt;
 	user_info.signature = get_signature(user_info.timestamp, user_info.salt, user_info.api_secret);
-	free(uniq);
+	free(uuid);
+
 	return user_info;
 }
 
@@ -37,7 +61,9 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
 	return realsize;
 }
 
-/* Process curl */
+/**
+* @brief  Process curl
+*/
 int curl_process(bool is_post, char *options, char *path, char *api_name, response_struct *output)
 {
 	CURL *curl;
@@ -56,7 +82,7 @@ int curl_process(bool is_post, char *options, char *path, char *api_name, respon
 		api_version = "1.1";
 	}
 
-	/* Set url. is_pose true = POST, false = GET */
+	// Set url. is_pose true = POST, false = GET
 	if (is_post) {
 		sprintf(url, "%s/%s/%s/%s", host, api_name, api_version, path);
 	}
@@ -64,7 +90,7 @@ int curl_process(bool is_post, char *options, char *path, char *api_name, respon
 		sprintf(url, "%s/%s/%s/%s?%s", host, api_name, api_version, path, options);
 	}
 
-	/* initialize curl */
+	// initialize curl
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 	curl = curl_easy_init();
 
@@ -79,22 +105,21 @@ int curl_process(bool is_post, char *options, char *path, char *api_name, respon
 		{
 			curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
 		}
-		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); /* CURLOPT_VERBOSE shows infomation about connected server. USEFUL for debugging */
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); // CURLOPT_VERBOSE shows infomation about connected server. USEFUL for debugging
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, "REST SDK C&CPP/1.0");
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "REST SDK C&CPP/2.0");
 		res = curl_easy_perform(curl);
 
-		/* Check for errors */
+		// Check for errors
 		if (res != CURLE_OK)
 			fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
 		else
 			printf("%lu bytes retrieved\n", (long)response.size);
 
-		/* always cleanup */
-
+		// always cleanup
 		curl_easy_cleanup(curl);
 	}
 	curl_global_cleanup();
@@ -103,6 +128,92 @@ int curl_process(bool is_post, char *options, char *path, char *api_name, respon
 	return res;
 }
 
+/**
+* @brief Process curl ( Image )
+*/
+int multi_curl_process(const user_opt *u, const send_opt *s, const upload_image_opt *i, char *path, char *api_name, response_struct *output)
+{
+	CURL *curl;
+	CURLcode res;
+	char url[1024];
+	struct curl_httppost *formpost = NULL;
+	struct curl_httppost *lastptr = NULL;
+	struct curl_slist *headerlist = NULL;
+	response_struct response;
+	char *host = "http://api.coolsms.co.kr";
+	char *api_version = "2";
+	/* initialize response struct */
+	response.memory = (char*)malloc(1);  /* will be grown as needed by the realloc above */
+	response.size = 0;    /* no data at this point */
+
+						  /* set url and initilize curl */
+	sprintf(url, "%s/%s/%s/%s", host, api_name, api_version, path);
+	curl = curl_easy_init();
+
+	if (path == "send") {
+		/* set values to curl_form */
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "api_key", CURLFORM_COPYCONTENTS, u->api_key, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "salt", CURLFORM_COPYCONTENTS, u->salt, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "signature", CURLFORM_COPYCONTENTS, u->signature, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "timestamp", CURLFORM_COPYCONTENTS, u->timestamp, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "to", CURLFORM_COPYCONTENTS, s->to, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "from", CURLFORM_COPYCONTENTS, s->from, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "text", CURLFORM_COPYCONTENTS, s->text, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "charset", CURLFORM_COPYCONTENTS, s->charset, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "type", CURLFORM_COPYCONTENTS, s->type, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "image", CURLFORM_FILE, s->image, CURLFORM_CONTENTTYPE, "image/jpeg", CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "refname", CURLFORM_COPYCONTENTS, s->refname, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "datetime", CURLFORM_COPYCONTENTS, s->datetime, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "country_code", CURLFORM_COPYCONTENTS, s->country_code, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "subject", CURLFORM_COPYCONTENTS, s->subject, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "srk", CURLFORM_COPYCONTENTS, s->srk, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "mode", CURLFORM_COPYCONTENTS, s->mode, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "delay", CURLFORM_COPYCONTENTS, s->delay, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "force_sms", CURLFORM_COPYCONTENTS, s->force_sms, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "os_platform", CURLFORM_COPYCONTENTS, s->os_platform, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "dev_lang", CURLFORM_COPYCONTENTS, s->dev_lang, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "sdk_version", CURLFORM_COPYCONTENTS, s->sdk_version, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "app_version", CURLFORM_COPYCONTENTS, s->app_version, CURLFORM_END);
+	} else {
+		/* set values to curl_form */
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "api_key", CURLFORM_COPYCONTENTS, u->api_key, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "salt", CURLFORM_COPYCONTENTS, u->salt, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "signature", CURLFORM_COPYCONTENTS, u->signature, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "timestamp", CURLFORM_COPYCONTENTS, u->timestamp, CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "image", CURLFORM_FILE, i->image, CURLFORM_CONTENTTYPE, "image/jpeg", CURLFORM_END);
+		curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "encoding", CURLFORM_COPYCONTENTS, i->encoding, CURLFORM_END);
+	}
+
+	if (curl)
+	{
+		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); /* CURLOPT_VERBOSE shows infomation about connected server. USEFUL for debugging */
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
+		curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response);
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "REST SDK C&CPP/2.0");
+		res = curl_easy_perform(curl);
+
+		/* Check for errors */
+		if (res != CURLE_OK)
+			fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+		else
+			printf("%lu bytes retrieved\n", (long)response.size);
+
+		*output = response;
+		/* then cleanup curl, formpost and headerlist */
+		curl_easy_cleanup(curl);
+		curl_formfree(formpost);
+		curl_slist_free_all(headerlist);
+	}
+	return res;
+}
+
+/**
+* @brief Change the type from string
+*/
 char* time_to_string(const time_t time) {
 	char *output;
 	char *buf_str = malloc(sizeof(time) * 2 + 1);
@@ -113,6 +224,9 @@ char* time_to_string(const time_t time) {
 	return output;
 }
 
+/**
+* @brief Get a timestamp
+*/
 char* get_timestamp()
 {
 	char *output;
@@ -124,7 +238,10 @@ char* get_timestamp()
 	return output;
 }
 
-char* get_uniq()
+/**
+* @brief Get a uuid for salt
+*/
+char* get_uuid()
 {
 	struct tm tm_val;
 	char *buf;
@@ -146,6 +263,9 @@ char* get_uniq()
 	return buf;
 }
 
+/**
+* @brief Get a signature with hash_hmac
+*/
 char* get_signature(const char *datetime, const char *salt, const char *api_secret)
 {
 	char *output;
@@ -153,7 +273,7 @@ char* get_signature(const char *datetime, const char *salt, const char *api_secr
 	char data_unsigned[64];
 	char * hash_data;
 	hash_data = (char*)malloc(strlen(datetime) + strlen(salt) + 1);
-	/*hash 예외처리*/
+	/* hash 예외처리 */
 	sprintf(data_unsigned, "%s%s", datetime, salt);
 	md5_hmac((unsigned char*)api_secret, strlen(api_secret), (unsigned char*)data_unsigned, strlen(data_unsigned), signature);
 
@@ -168,6 +288,9 @@ char* get_signature(const char *datetime, const char *salt, const char *api_secr
 	return output;
 }
 
+/**
+* @brief Return result
+*/
 void print_result(response_struct result)
 {
 	/* parsing json results */
@@ -176,7 +299,7 @@ void print_result(response_struct result)
 	root = json_loads(result.memory, 0, &error);
 	if (!root) {
 		fprintf(stderr, "error : root\n");
-		fprintf(stderr, "error : online %d: %s\n", error.line, error.text);
+		fprintf(stderr, "error : on line %d: %s\n", error.line, error.text);
 		exit(1);
 	}
 

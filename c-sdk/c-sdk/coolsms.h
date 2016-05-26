@@ -42,6 +42,7 @@ typedef struct { char *site_user; } get_default_opt;
 typedef struct { char *handle_key, *site_user; } set_default_opt;
 
 int curl_process(bool, char *, char *, char *, response_struct *);
+int multi_curl_process(const user_opt *, const send_opt *, const upload_image_opt *, char *, char *, response_struct *);
 
 user_opt user_opt_init(char *, char *);
 /* Group message */
@@ -103,6 +104,6 @@ response_struct get_default(const user_opt *, const get_default_opt *);
 
 char* time_to_string(const time_t);
 char* get_timestamp();
-char* get_uniq();
+char* get_uuid();
 char* get_signature(const char*, const char *, const char *);
 void print_result(response_struct);

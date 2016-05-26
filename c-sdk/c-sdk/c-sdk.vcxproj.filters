@@ -130,8 +130,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\..\..\Pictures\test.jpg">
-      <Filter>소스 파일\Examples\Image</Filter>
+    <Image Include="test.jpg">
+      <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
 </Project>
